@@ -7,8 +7,11 @@ import java.util.List;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -36,6 +39,8 @@ public class Tank extends Application {
     
     Group group;
     Scene scene;
+    Button resume;
+    Button pause;
 
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
@@ -59,7 +64,30 @@ public class Tank extends Application {
         createTankModels();
         createEnvironment();
         
+        pause = new Button();
+        pause.setLayoutX((Settings.SCENE_WIDTH / 2) - 75);
+        pause.setLayoutY(Settings.SCENE_HEIGHT - 50);
+        pause.setText("Pause");
+        pause.setOnAction(new EventHandler<ActionEvent>() {
+        	public void handle(ActionEvent e) {
+        		pauseGame(game);
+        	}
+        });
+        
+        resume = new Button();
+        resume.setLayoutX((Settings.SCENE_WIDTH / 2) + 20);
+        resume.setLayoutY(Settings.SCENE_HEIGHT - 50);
+        resume.setText("Resume");
+        resume.setOnAction(new EventHandler<ActionEvent>() {
+        	public void handle(ActionEvent e) {
+        		resumeGame(game);
+        	}
+        });
+             
+        group.getChildren().add(resume);
+        group.getChildren().add(pause);
         startGame(game);
+        
     }
     
     private void startGame(AnimationTimer g) {
@@ -70,11 +98,11 @@ public class Tank extends Application {
     private void pauseGame(AnimationTimer g) {
     	g.stop();
     }
-    /*
-    private void resumeGame() {
-    	game.start();
+    
+    private void resumeGame(AnimationTimer g) {
+    	g.start();
     }
-    */
+    
     private void loadGame() throws FileNotFoundException {
         playerOneImage = new Image(new FileInputStream("/Users/joshua/Documents/GitHub/Tank_Game/GameDemo/images/tank_right.png"));
         playerTwoImage = new Image(new FileInputStream("/Users/joshua/Documents/GitHub/Tank_Game/GameDemo/images/tank_left.png"));
@@ -119,16 +147,16 @@ public class Tank extends Application {
         	playerTwo.updateUI();
         	
         	if (playerOne.getP1Controls().isFire()) {
-        		double xPosP1 = playerOne.getView().getLayoutX() + (6.00 * playerOne.getImage().getWidth() / 8.00);
-            	double yPosP1 = playerOne.getView().getLayoutY();
+        		double xPosP1 = playerOne.getView().getLayoutX() + playerOne.getImage().getWidth() - 20; 
+            	double yPosP1 = playerOne.getView().getLayoutY() + 30;
             	
             	Bullets bullet = new Bullets(bulletLayer, bulletImage, xPosP1, yPosP1, 0.00, 0.00, Settings.BULLET_SPEED);
             	bullets.add(bullet);
         	}
         	
         	if (playerTwo.getP2Controls().isFire()) {
-        		double xPosP2 = playerTwo.getView().getLayoutX() + (-3.00 * playerTwo.getImage().getWidth() / 2.00);
-            	double yPosP2 = playerTwo.getView().getLayoutY();
+        		double xPosP2 = playerTwo.getView().getLayoutX() + 10; 
+            	double yPosP2 = playerTwo.getView().getLayoutY() + 30;
             	
             	Bullets bullet = new Bullets(bulletLayer, bulletImage, xPosP2, yPosP2, 0.00, 0.00, -Settings.BULLET_SPEED);
             	bullets.add(bullet);
@@ -137,7 +165,7 @@ public class Tank extends Application {
         	bullets.forEach(bullet -> bullet.move());
         	bullets.forEach(bullet -> bullet.updateUI());
         }
-    };
+    };   
    
     public static void main(String[] args) {
         launch(args);
