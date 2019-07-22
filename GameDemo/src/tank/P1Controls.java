@@ -16,9 +16,11 @@ public class P1Controls {
 
     private KeyCode p1LeftKey = KeyCode.A;
     private KeyCode p1RightKey = KeyCode.D;
+    private KeyCode p1UpKey = KeyCode.W;
+    private KeyCode p1DownKey = KeyCode.S;
     private KeyCode fire = KeyCode.F;
 
-    Scene scene;
+    Scene scene;  
 
     public P1Controls(Scene scene) {
         this.scene = scene;
@@ -27,11 +29,6 @@ public class P1Controls {
     public void addEventListeners() {
         scene.addEventFilter(KeyEvent.KEY_PRESSED, keyPressedEventHandler);
         scene.addEventFilter(KeyEvent.KEY_RELEASED, keyReleasedEventHandler);
-    }
-
-    public void removeEventListeners() {
-        scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyPressedEventHandler);
-        scene.removeEventFilter(KeyEvent.KEY_RELEASED, keyReleasedEventHandler);
     }
 
     private EventHandler<KeyEvent> keyPressedEventHandler = new EventHandler<KeyEvent>() {
@@ -59,4 +56,13 @@ public class P1Controls {
     public boolean isFire() {
         return keyboard.get(fire.ordinal());
     }
+    
+    public boolean isMoveUp() {
+        return keyboard.get(p1UpKey.ordinal()) && !keyboard.get(p1DownKey.ordinal());
+    }
+    
+    public boolean isMoveDown() {
+        return keyboard.get(p1DownKey.ordinal()) && !keyboard.get(p1UpKey.ordinal());
+    }
+    
 }

@@ -14,9 +14,11 @@ import javafx.event.EventHandler;
 public class P2Controls {
     private BitSet keyboard = new BitSet();
 
-    private KeyCode p2LeftKey = KeyCode.LEFT;
-    private KeyCode p2RightKey = KeyCode.RIGHT;
-    private KeyCode fire = KeyCode.SPACE;
+    private KeyCode p2LeftKey = KeyCode.J;
+    private KeyCode p2RightKey = KeyCode.L;
+    private KeyCode p1UpKey = KeyCode.I;
+    private KeyCode p1DownKey = KeyCode.K;
+    private KeyCode fire = KeyCode.H;
     
     Scene scene;
 
@@ -29,11 +31,6 @@ public class P2Controls {
         scene.addEventFilter(KeyEvent.KEY_RELEASED, keyReleasedEventHandler);
     }
 
-    public void removeEventListeners() {
-        scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyPressedEventHandler);
-        scene.removeEventFilter(KeyEvent.KEY_RELEASED, keyReleasedEventHandler);
-    }
-    
     private EventHandler<KeyEvent> keyPressedEventHandler = new EventHandler<KeyEvent>() {
     	@Override
     	public void handle(KeyEvent e) {
@@ -59,5 +56,13 @@ public class P2Controls {
     public boolean isFire() {
         return keyboard.get(fire.ordinal());
     }
-     
+    
+    public boolean isMoveUp() {
+        return keyboard.get(p1UpKey.ordinal()) && !keyboard.get(p1DownKey.ordinal());
+    }
+    
+    public boolean isMoveDown() {
+        return keyboard.get(p1DownKey.ordinal()) && !keyboard.get(p1UpKey.ordinal());
+    }
+         
 }    

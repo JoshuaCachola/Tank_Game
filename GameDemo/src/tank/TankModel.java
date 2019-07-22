@@ -11,6 +11,8 @@ public class TankModel extends Sprite {
 
     private double tankMinX;
     private double tankMaxX;
+    private double tankMinY;
+    private double tankMaxY;
 
     private P1Controls c1;
     private P2Controls c2;
@@ -18,12 +20,12 @@ public class TankModel extends Sprite {
     private double speed;
     private double health;
 
-    public TankModel(Pane playerlayer, Image image, double x, double y, double dx, double dy, double health, double speed, P1Controls c1, P2Controls c2, String player) {//, Pane bulletLayer, Image bulletImg, List<Bullets> bullets) {
-        super(playerlayer, image, x, y, dx, dy, player);
+    public TankModel(Pane playerlayer, Image image, double x, double y, double  changeX, double changeY, double health, double speed, P1Controls c1, P2Controls c2, String player) {
+        super(playerlayer, image, x, y, changeX, changeY, player);
         this.health = health;
         this.speed = speed;
         this.c1 = c1;
-        this.c2 = c2;
+        this.c2 = c2;        
 
         createBounds();
     }
@@ -41,34 +43,50 @@ public class TankModel extends Sprite {
     		tankMinX = (Settings.SCENE_WIDTH / 2.0) - (this.getImage().getWidth() / 2.00 - 50.00);
             tankMaxX = Settings.SCENE_WIDTH - (this.getImage().getWidth() / 2.00);
     	}
+    	
+    	tankMinY = 0 - (this.getImage().getHeight() / 2);
+    	tankMaxY = Settings.SCENE_HEIGHT * .85;
     }
 
     public void processInput() {
     	if (getPlayer().equals("player1")) {
         // horizontal direction for player 1
     		if (c1.isMoveLeft()) {
-    			setDx(-speed);
+    			setChangeX(-speed);
         	} 
     		else if (c1.isMoveRight()) {
-        		setDx(speed);
-        	}     	
+        		setChangeX(speed);
+        	}  
+    		else if (c1.isMoveUp()) {
+        		setChangeY(-(speed / 2));
+        	}
+    		else if (c1.isMoveDown()) {
+        		setChangeY(speed / 2);
+        	}
     		else {
-        		setDx(0.0);
+        		setChangeX(0.0);
+        		setChangeY(0.0);
         	}
     	} 
     	else if (getPlayer().equals("player2")){
     	// horizontal direction for player 2
     		if (c2.isMoveLeft()) {
-    			setDx(-speed);
+    			setChangeX(-speed);
     		}
     		else if (c2.isMoveRight()) {
-    			setDx(speed);
+    			setChangeX(speed);
     		}
+    		else if (c2.isMoveUp()) {
+        		setChangeY(-(speed / 2));
+        	}
+    		else if (c2.isMoveDown()) {
+        		setChangeY(speed / 2);
+        	}
     		else {
-    			setDx(0.0);
+    			setChangeX(0.0);
+    			setChangeY(0.0);
     		}
-    	}    	
-		
+    	}    			
     }
     
     @Override
@@ -78,15 +96,21 @@ public class TankModel extends Sprite {
         checkBounds();
     }
 
-    private void checkBounds() {
-        // horizontal
-        if(Double.compare(getX(), tankMinX) < 0.00) {
+    public void checkBounds() {  
+        if (Double.compare(getX(), tankMinX) < 0.00) {
             setX(tankMinX);
         } 
-        else if(Double.compare(getX(), tankMaxX) > 0.00) {
+        else if (Double.compare(getX(), tankMaxX) > 0.00) {
             setX(tankMaxX);
         }
-    }
+        
+        if (Double.compare(getY(), tankMinY) < 0.00) {
+        	setY(tankMinY);
+        }
+        else if (Double.compare(getY(), tankMaxY) > 0.00) {
+        	setY(tankMaxY);
+        }
+    }    
     
     public P1Controls getP1Controls() {
 		return c1;
@@ -102,6 +126,14 @@ public class TankModel extends Sprite {
 	
 	public void setHealth(double health) {
 		this.health = health;
+	}
+	
+	public double getTankMaxY() {
+		return tankMaxY;
+	}
+	
+	public double getTankMinY() {
+		return tankMinY;
 	}
      
 }
