@@ -7,9 +7,6 @@ import java.util.List;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -17,8 +14,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 /**
  * 
@@ -29,14 +26,13 @@ public class Tank extends Application {
     Pane playerLayer;
     Pane bulletLayer;
     Pane envLayer;
-    static Pane parachuteLayer;
+    Pane textPane;
     //Pane healthPane;
 
     Image playerOneImage;
     Image playerTwoImage;
     Image bulletImage;
-    Image ground;
-    static Image parachute;
+    Image background;
 
     TankModel playerOne;
     TankModel playerTwo;
@@ -49,9 +45,12 @@ public class Tank extends Application {
     Scene scene;
     Button resume;
     Button pause;
+    Button mainMenu;
     
     Rectangle playerOneHealth;
     Rectangle playerTwoHealth;
+    
+    Text gameOverText = new Text();
 
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
@@ -61,14 +60,13 @@ public class Tank extends Application {
         playerLayer = new Pane();
         bulletLayer = new Pane();
         envLayer = new Pane();
-        parachuteLayer = new Pane();
+        textPane = new Pane();
 
         group.getChildren().add(envLayer);
         group.getChildren().add(playerLayer);
-        group.getChildren().add(bulletLayer);
-        group.getChildren().add(parachuteLayer);        
+        group.getChildren().add(bulletLayer);       
 
-        scene = new Scene(group, Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT, Color.web("0x87CEEB"));
+        scene = new Scene(group, Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT);
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -78,7 +76,7 @@ public class Tank extends Application {
         createEnvironment();        
         
         pause = new Button();
-        pause.setLayoutX((Settings.SCENE_WIDTH / 2) - 75);
+        pause.setLayoutX((Settings.SCENE_WIDTH / 2) - 15);
         pause.setLayoutY(Settings.SCENE_HEIGHT - 50);
         pause.setText("Pause");
         pause.setOnAction(new EventHandler<ActionEvent>() {
@@ -88,7 +86,7 @@ public class Tank extends Application {
         });
         
         resume = new Button();
-        resume.setLayoutX((Settings.SCENE_WIDTH / 2) + 20);
+        resume.setLayoutX((Settings.SCENE_WIDTH / 2) + 45);
         resume.setLayoutY(Settings.SCENE_HEIGHT - 50);
         resume.setText("Resume");
         resume.setOnAction(new EventHandler<ActionEvent>() {
@@ -108,7 +106,7 @@ public class Tank extends Application {
         //group.getChildren().add(playerOneHealth);
         //group.getChildren().add(playerTwoHealth);
         
-        startGame(game);        
+        startGame(game);                          
     }
     
     private void startGame(AnimationTimer g) {
@@ -128,8 +126,8 @@ public class Tank extends Application {
         playerOneImage = new Image(new FileInputStream("/Users/joshua/Documents/GitHub/Tank_Game/GameDemo/images/tank_right.png"));
         playerTwoImage = new Image(new FileInputStream("/Users/joshua/Documents/GitHub/Tank_Game/GameDemo/images/tank_left.png"));
         bulletImage = new Image(new FileInputStream("/Users/joshua/Documents/GitHub/Tank_Game/GameDemo/images/transparent-laser.png"));
-        ground = new Image(new FileInputStream("/Users/joshua/Documents/GitHub/Tank_Game/GameDemo/images/sprite_floor.png"));
-        parachute = new Image(new FileInputStream("/Users/joshua/Desktop/ballon.png"));
+        background = new Image(new FileInputStream("/Users/joshua/Documents/GitHub/Tank_Game/GameDemo/images/background.png"));
+        
     } 
 
     private void createTankModels() {
@@ -146,13 +144,13 @@ public class Tank extends Application {
         double startingP2X = Settings.SCENE_WIDTH * .80;
 
         // create TankModel
-        playerOne = new TankModel(playerLayer, playerOneImage, startingP1X, startingY, 0, 0, Settings.TANK_HEALTH, Settings.TANK_SPEED, c1, c2, "player1");
-        playerTwo = new TankModel(playerLayer, playerTwoImage, startingP2X, startingY, 0, 0, Settings.TANK_HEALTH, Settings.TANK_SPEED, c1, c2, "player2");              
+        playerOne = new TankModel(playerLayer, playerOneImage, startingP1X, startingY, 0, 0, Settings.TANK_HEALTH, Settings.TANK_SPEED, c1, c2, "player1", 0, 0);
+        playerTwo = new TankModel(playerLayer, playerTwoImage, startingP2X, startingY, 0, 0, Settings.TANK_HEALTH, Settings.TANK_SPEED, c1, c2, "player2", 0, 0);              
     }
     
     private void createEnvironment() {
-    	double startingY = Settings.SCENE_HEIGHT * .75;
-    	sceneEnv = new Environment(envLayer, ground, 0, startingY, 0, 0);
+    	//double startingY = Settings.SCENE_HEIGHT * .75;
+    	sceneEnv = new Environment(envLayer, background, 0, 0, 0, 0, 0, 0);
     }
     
     private AnimationTimer game = new AnimationTimer() {
@@ -172,7 +170,7 @@ public class Tank extends Application {
         		double xPosP1 = playerOne.getView().getLayoutX() + playerOne.getImage().getWidth() - 20; 
             	double yPosP1 = playerOne.getView().getLayoutY() + 5;
             	
-            	Bullets bullet = new Bullets(bulletLayer, bulletImage, xPosP1, yPosP1, 0.00, 0.00, Settings.BULLET_SPEED, Settings.BULLET_DAMAGE);
+            	Bullets bullet = new Bullets(bulletLayer, bulletImage, xPosP1, yPosP1, 0.00, 0.00, Settings.BULLET_SPEED, Settings.BULLET_DAMAGE, playerOne.getR(), 0, "player1");
             	p1Bullets.add(bullet);
         	}
         	
@@ -180,7 +178,7 @@ public class Tank extends Application {
         		double xPosP2 = playerTwo.getView().getLayoutX() - (playerTwo.getImage().getWidth() / 3); 
             	double yPosP2 = playerTwo.getView().getLayoutY() + 5;
             	
-            	Bullets bullet = new Bullets(bulletLayer, bulletImage, xPosP2, yPosP2, 0.00, 0.00, -Settings.BULLET_SPEED, Settings.BULLET_DAMAGE);
+            	Bullets bullet = new Bullets(bulletLayer, bulletImage, xPosP2, yPosP2, 0.00, 0.00, -Settings.BULLET_SPEED, Settings.BULLET_DAMAGE, playerTwo.getR(), 0, "player2");
             	p2Bullets.add(bullet);
         	}
         	/*
@@ -211,21 +209,38 @@ public class Tank extends Application {
         			bullet.removeFromLayer();
         			p2Bullets.remove(bullet);
         			System.out.println(playerOne.getHealth());
-        		}
-        			
+        		}        		
         	}
         	
         	if (playerOne.getHealth() <= 0) {
-        		playerOne.removeFromLayer();
-        		playerOne = null;
+             	this.stop();  
+             	new GameOverText(textPane, group, "Player 2");
+             	mainMenuButton();
         	}
         	
         	if (playerTwo.getHealth() <= 0) {
-        		playerTwo.removeFromLayer();
-        		playerTwo = null;
+             	this.stop();  
+             	new GameOverText(textPane, group, "Player 1");
+             	mainMenuButton();        	        	
         	}
         }
-    };   
+    }; 
+    
+    private void mainMenuButton() {
+    	mainMenu = new Button();
+        mainMenu.setLayoutX((Settings.SCENE_WIDTH / 2) - 20);
+        mainMenu.setLayoutY(Settings.SCENE_HEIGHT * .60);
+        mainMenu.setText("Main Menu");
+        mainMenu.setOnAction(new EventHandler<ActionEvent>() {
+        	public void handle(ActionEvent e) {
+        		resumeGame(game);
+        	}
+        });
+             
+        group.getChildren().add(mainMenu);
+        group.getChildren().remove(resume);
+        group.getChildren().remove(pause);
+    }
 /*
     private void createHealthBars() {
     	playerOneHealth = new Rectangle(200.0, 30.0, Color.YELLOW);

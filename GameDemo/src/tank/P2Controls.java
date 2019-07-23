@@ -19,6 +19,8 @@ public class P2Controls {
     private KeyCode p1UpKey = KeyCode.I;
     private KeyCode p1DownKey = KeyCode.K;
     private KeyCode fire = KeyCode.H;
+    private KeyCode p2RotateUp = KeyCode.U;
+    private KeyCode p2RotateDown = KeyCode.N;
     
     Scene scene;
 
@@ -63,6 +65,14 @@ public class P2Controls {
     
     public boolean isMoveDown() {
         return keyboard.get(p1DownKey.ordinal()) && !keyboard.get(p1UpKey.ordinal());
+    }
+    
+    public boolean isRotateUp() {
+        return keyboard.get(p2RotateUp.ordinal()) && !keyboard.get(p2RotateDown.ordinal());
+    }
+    
+    public boolean isRotateDown() {
+        return keyboard.get(p2RotateDown.ordinal()) && !keyboard.get(p2RotateUp.ordinal());
     }
          
 }    

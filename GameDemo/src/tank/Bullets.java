@@ -12,8 +12,8 @@ public class Bullets extends Sprite {
 	private double bulletMinY;
 	private double bulletMaxY;
 	
-	public Bullets(Pane layer, Image image, double x, double y, double dx, double dy, double speed, double damage) {
-		super(layer, image, x, y, dx, dy, "");
+	public Bullets(Pane layer, Image image, double x, double y, double dx, double dy, double speed, double damage, double r, double changeR, String player) {
+		super(layer, image, x, y, dx, dy, player, r, changeR);
 		this.speed = speed;
 		this.damage = damage;
 		createBounds();
@@ -28,7 +28,20 @@ public class Bullets extends Sprite {
 	
 	@Override
 	public void move() {
-        setX(speed + getX());
+		if (getR() == 0) {
+			setX(speed + getX());
+		}
+		else if (getR() <= 0){
+			setX((speed + getX()));
+	        setR(getR());
+	        setY((-speed / 4 + getY()));
+		}
+		else {
+			setX((speed + getX()));
+	        setR(getR());
+	        setY((speed / 4 + getY()));
+		}
+        
     }
 	
 	public double getDamage() {

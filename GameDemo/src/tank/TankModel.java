@@ -13,6 +13,8 @@ public class TankModel extends Sprite {
     private double tankMaxX;
     private double tankMinY;
     private double tankMaxY;
+    private double tankMaxUpRotation;
+    private double tankMinDownRotation;
 
     private P1Controls c1;
     private P2Controls c2;
@@ -20,12 +22,13 @@ public class TankModel extends Sprite {
     private double speed;
     private double health;
 
-    public TankModel(Pane playerlayer, Image image, double x, double y, double  changeX, double changeY, double health, double speed, P1Controls c1, P2Controls c2, String player) {
-        super(playerlayer, image, x, y, changeX, changeY, player);
+    public TankModel(Pane playerlayer, Image image, double x, double y, double  changeX, double changeY, double health, double speed, P1Controls c1, P2Controls c2, String player, double r, double changeR) {
+        super(playerlayer, image, x, y, changeX, changeY, player, r, changeR);
         this.health = health;
         this.speed = speed;
         this.c1 = c1;
-        this.c2 = c2;        
+        this.c2 = c2; 
+        
 
         createBounds();
     }
@@ -36,16 +39,23 @@ public class TankModel extends Sprite {
     	// player1 can travel from left to middle
     	if (getPlayer() == "player1") {
     		tankMinX = 0 - this.getImage().getWidth() / 2.00;
-            tankMaxX = (Settings.SCENE_WIDTH / 2.0) - (this.getImage().getWidth() / 2.00);
+            tankMaxX = (Settings.SCENE_WIDTH / 2.0) - (this.getImage().getWidth() / 2.00) - 50.0;
+            tankMinY = Settings.SCENE_HEIGHT * .73;
+        	tankMaxY = Settings.SCENE_HEIGHT - (this.getImage().getHeight() / 2);
+        	tankMaxUpRotation = -15;
+        	tankMinDownRotation = 15;
     	}
     	// player2 can travel from right to middle
     	else {
-    		tankMinX = (Settings.SCENE_WIDTH / 2.0) - (this.getImage().getWidth() / 2.00 - 50.00);
+    		tankMinX = (Settings.SCENE_WIDTH / 2.0) - (this.getImage().getWidth() / 2.00 - 125);
             tankMaxX = Settings.SCENE_WIDTH - (this.getImage().getWidth() / 2.00);
+            tankMinY = Settings.SCENE_HEIGHT * .63;
+            tankMaxY = Settings.SCENE_HEIGHT - (this.getImage().getHeight() / 2);
+            tankMaxUpRotation = 15;
+        	tankMinDownRotation = -15;
     	}
     	
-    	tankMinY = 0 - (this.getImage().getHeight() / 2);
-    	tankMaxY = Settings.SCENE_HEIGHT * .85;
+    
     }
 
     public void processInput() {
@@ -63,9 +73,16 @@ public class TankModel extends Sprite {
     		else if (c1.isMoveDown()) {
         		setChangeY(speed / 2);
         	}
+    		else if (c1.isRotateUp()) {
+    			setChangeR(-2.5);
+    		}
+    		else if (c1.isRotateDown()) {
+    			setChangeR(2.5);
+    		}
     		else {
         		setChangeX(0.0);
         		setChangeY(0.0);
+        		setChangeR(0.0);
         	}
     	} 
     	else if (getPlayer().equals("player2")){
@@ -82,9 +99,16 @@ public class TankModel extends Sprite {
     		else if (c2.isMoveDown()) {
         		setChangeY(speed / 2);
         	}
+    		else if (c2.isRotateUp()) {
+    			setChangeR(2.5);
+    		}
+    		else if (c2.isRotateDown()) {
+    			setChangeR(-2.5);
+    		}
     		else {
     			setChangeX(0.0);
     			setChangeY(0.0);
+    			setChangeR(0.0);
     		}
     	}    			
     }
@@ -110,6 +134,20 @@ public class TankModel extends Sprite {
         else if (Double.compare(getY(), tankMaxY) > 0.00) {
         	setY(tankMaxY);
         }
+        
+        if (Double.compare(getR(), tankMaxUpRotation) > 0.00 && this.getPlayer().equals("player2")) {
+        	setR(tankMaxUpRotation);
+        }
+        else if (Double.compare(getR(), tankMinDownRotation) < 0.00 && this.getPlayer().equals("player2")) {
+        	setR(tankMinDownRotation);
+        }
+        
+        if (Double.compare(getR(), tankMaxUpRotation) < 0.00 && this.getPlayer().equals("player1")) {
+        	setR(tankMaxUpRotation);
+        }
+        else if (Double.compare(getR(), tankMinDownRotation) > 0.00 && this.getPlayer().equals("player1")) {
+        	setR(tankMinDownRotation);
+        }
     }    
     
     public P1Controls getP1Controls() {
@@ -127,7 +165,7 @@ public class TankModel extends Sprite {
 	public void setHealth(double health) {
 		this.health = health;
 	}
-	
+	/*
 	public double getTankMaxY() {
 		return tankMaxY;
 	}
@@ -135,5 +173,5 @@ public class TankModel extends Sprite {
 	public double getTankMinY() {
 		return tankMinY;
 	}
-     
+    */
 }

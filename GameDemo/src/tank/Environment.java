@@ -5,9 +5,10 @@ import javafx.scene.layout.Pane;
 
 public class Environment extends Sprite {
 
-	public Environment(Pane layer, Image image, double x, double y, double dx, double dy) {
-		super(layer, image, x, y, dx, dy, "");
-		// TODO Auto-generated constructor stub
+	public Environment(Pane layer, Image image, double x, double y, double dx, double dy, double r, double changeR) {
+		super(layer, image, x, y, dx, dy, "", r, changeR);
+		//this.getView().getFitWidth();
+		//this.getView().getFitHeight();
 	}
 
 }

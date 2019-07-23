@@ -16,26 +16,31 @@ public class Sprite {
 
     private double x;
     private double y;
+    private double r;
 
     private double changeX;
     private double changeY;
+    private double changeR;
 
 
     private double width;
     private double height;
 
-    public Sprite(Pane layer, Image image, double x, double y, double changeX, double changeY, String player) {
+    public Sprite(Pane layer, Image image, double x, double y, double changeX, double changeY, String player, double r, double changeR) {
         this.layer = layer;
         this.image = image;
         this.x = x;
         this.y = y;
+        this.r = r;
         this.changeX = changeX;
         this.changeY = changeY;
+        this.changeR = changeR;
 
         this.player = player;
 
         this.imageView = new ImageView(image);
         this.imageView.relocate(x, y);
+        this.imageView.setRotate(r);
 
         this.width = image.getWidth();
         this.height = image.getHeight();
@@ -91,10 +96,27 @@ public class Sprite {
     public void setChangeY(double changeY) {
         this.changeY = changeY;
     }
+    
+    public void setR(double r) {
+    	this.r = r;
+    }
+    
+    public double getR() {
+    	return r;
+    }
+    
+    public void setChangeR(double changeR) {
+    	this.changeR = changeR;
+    }
+    
+    public double getChangeR() {
+    	return changeR;
+    }
 
     public void move() {
         setX(getChangeX() + getX());
         setY(getChangeY() + getY());
+        setR(getChangeR() + getR());
     }
     
     public ImageView getView() {
@@ -102,7 +124,8 @@ public class Sprite {
     }
 
     public void updateUI() {
-        imageView.relocate(x, y);
+        imageView.relocate(getX(), getY());
+        imageView.setRotate(getR());
     }
 
     public double getWidth() {

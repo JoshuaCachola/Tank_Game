@@ -6,7 +6,7 @@ package tank;
  */
 public class Settings {
     public static double SCENE_WIDTH = 1280;
-    public static double SCENE_HEIGHT = 780;
+    public static double SCENE_HEIGHT = 720;
 
     public static double TANK_SPEED = 4.0;
     public static double TANK_HEALTH = 100.0;
