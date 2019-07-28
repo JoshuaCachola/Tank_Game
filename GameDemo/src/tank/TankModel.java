@@ -165,13 +165,4 @@ public class TankModel extends Sprite {
 	public void setHealth(double health) {
 		this.health = health;
 	}
-	/*
-	public double getTankMaxY() {
-		return tankMaxY;
-	}
-	
-	public double getTankMinY() {
-		return tankMinY;
-	}
-    */
 }

@@ -1,29 +1,22 @@
 package tank;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-
+/**
+ * 
+ * @author Joshua
+ *
+ */
 public class Bullets extends Sprite {
 	private double speed;
 	private double damage;
-	private double bulletMaxX;
-	private double bulletMinX;
-	private double bulletMinY;
-	private double bulletMaxY;
+	private boolean isRemovable;
 	
-	public Bullets(Pane layer, Image image, double x, double y, double dx, double dy, double speed, double damage, double r, double changeR, String player) {
+	public Bullets(Pane layer, Image image, double x, double y, double dx, double dy, double speed, double damage, double r, double changeR, String player, boolean isRemovable) {
 		super(layer, image, x, y, dx, dy, player, r, changeR);
 		this.speed = speed;
 		this.damage = damage;
-		createBounds();
-	}
-	
-	private void createBounds() {
-		this.bulletMinX = 0 - this.getWidth();
-		this.bulletMaxX = Settings.SCENE_WIDTH + this.getWidth();
-		this.bulletMinY = 0 - this.getHeight();
-		this.bulletMaxY = Settings.SCENE_HEIGHT + this.getHeight();
+		this.isRemovable = isRemovable;
 	}
 	
 	@Override
@@ -41,12 +34,18 @@ public class Bullets extends Sprite {
 	        setR(getR());
 	        setY((speed / 4 + getY()));
 		}
-        
     }
 	
 	public double getDamage() {
 		return damage;
 	}
+	
+	public boolean getIsRemovable() {
+		return isRemovable;
+	}
+	
+	public void setIsRemovable(boolean isRemovable) {
+		this.isRemovable = isRemovable;
+	}
 }
-		
-
+	
